@@ -8,6 +8,16 @@ app.set('view engine', 'pug');
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static('public'));
 
+function asyncHandler(cb){
+  return async(req, res, next) => {
+    try{
+      await cb(req, res, next);
+    } catch (err){
+      res.render('error', {error: err});
+    }
+  }
+}
+
 //CALL BACKS
 // function getUsers(cb){
 //   fs.readFile('data.json', 'utf8', (err, data) => {
@@ -55,14 +65,10 @@ function getUsers(b){
 // }); 
 
 // with async await
-app.get('/', async (req, res) => {
-  try{
-    const users = await getUsers();
+app.get('/', asyncHandler(async (req, res) => {
+  const users = await getUsers();
 //    throw new Error('ooooppps');
-    res.render('index', {title: 'Users', users: users.users})
-  } catch (err) {
-    res.render('error', {error:err});
-  }
-}); 
+  res.render('index', {title: 'Users', users: users.users})
+}) ); 
 
 app.listen(3000, () => console.log('App listening on port 3000!'));
