@@ -41,17 +41,28 @@ function getUsers(b){
   })
 }
 
-app.get('/', (req, res) => {
-  getUsers()
-  .then((users) => {
-//    throw new Error('oops');
+// app.get('/', (req, res) => {
+//   getUsers()
+//   .then((users) => {
+// //    throw new Error('oops');
+//     res.render('index', {title: 'Users', users: users.users})
+//   })
+//   .catch((err) => {
+//     res.render('error', {error:err});
+//   });
+//   getUsers((err, users) => {
+//   });
+// }); 
+
+// with async await
+app.get('/', async (req, res) => {
+  try{
+    const users = await getUsers();
+//    throw new Error('ooooppps');
     res.render('index', {title: 'Users', users: users.users})
-  })
-  .catch((err) => {
+  } catch (err) {
     res.render('error', {error:err});
-  });
-  getUsers((err, users) => {
-  });
+  }
 }); 
 
 app.listen(3000, () => console.log('App listening on port 3000!'));
